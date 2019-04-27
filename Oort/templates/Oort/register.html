@@ -1,0 +1,40 @@
+{% extends 'Oort/base.html' %}
+{% block content %}
+
+<!--コンテンツ登録用-->
+<!--画像や映像などのファイルを扱うときのおまじない-->
+<form method="post" enctype="multipart/form-data" >
+    <!--クロスサイトスクリプトフォージェリ(おまじない)-->
+  {% csrf_token %}
+  {{ form.as_p }}
+    <button type="submit" name="content">save</button>
+</form>
+
+<!--ジャンル登録用-->
+ジャンル用
+<form method="post">
+  {% csrf_token %}
+  {{ genre_form.as_p }}
+    <!--ボタンnameは「genre」だけだと何故か通らない。-->
+    <button type="submit" name="genre_form">save</button>
+</form>
+
+<!--キャスト登録用-->
+キャスト用
+<form method="post">
+  {% csrf_token %}
+  {{ cast_form.as_p }}
+    <button type="submit" name="cast">save</button>
+</form>
+
+<!--監督登録用-->
+監督用
+<form method="post">
+  {% csrf_token %}
+  {{ cast_form.as_p }}
+    <button type="submit" name="director">save</button>
+</form>
+
+<!--画像や映像などのファイルを扱うときのおまじない-->
+{{ form.media }}
+{% endblock %}

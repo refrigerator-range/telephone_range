@@ -1,0 +1,37 @@
+{% extends 'Oort/base.html' %}
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>detail)</title>
+</head>
+<body>
+
+<div class="media">
+
+    {% if movie.thumbnail %}
+    <!--サムネイルをクリックするとurls.pyのname='detail'にマッピングされる。コンテンツIDを渡して。-->
+    <td><img class="thumbnail" src="{{ movie.thumbnail.url }}"/></td>
+    {% else %}
+    <td><img class="thumbnail" src="{% static 'alter.PNG' %}"/></td>
+    {% endif %}
+
+    <div class="media-body">
+        <h1>{{ movie.title }}</h1>
+        <p>尺：{{ movie.payback_time }}</p>
+        <p>制作国：{{ movie.country }}</p>
+        <p>リリース：{{ movie.release }}</p>
+        <p>ジャンル：{{ movie.genre }}</p>
+        <p>監督：{{ movie.director }}</p>
+        <!--キャストは複数ある場合があるためALLをFOR回して全部出す-->
+        <p>キャスト：{% for cast in movie.cast.all %} {{ cast }}, {% endfor %}</p>
+        <p>アワード：{{ movie.award }}</p>
+    </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

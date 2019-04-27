@@ -1,0 +1,23 @@
+{% extends 'Oort/base.html' %}
+{% block content %}
+
+<!--ファイル経由インポート用-->
+<form method="post" enctype="multipart/form-data">
+    <!--クロスサイトスクリプトフォージェリ(おまじない)-->
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" name="import">send</button>
+</form>
+
+
+<!--DB直接インポート用-->
+<form method="post" enctype="multipart/form-data">
+    <!--クロスサイトスクリプトフォージェリ(おまじない)-->
+    {% csrf_token %}
+    <p><label>start: </label><input class="db_import" type="text" name="start"></p>
+    <p><label>end: </label><input class="db_import" type="text" name="end"></p>
+    <button type="submit" name="d_import">データ取込</button>
+</form>
+
+
+{% endblock %}

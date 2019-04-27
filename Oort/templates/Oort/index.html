@@ -1,0 +1,49 @@
+
+<!--base.htmlのblack content(endifまで)を常に表示(ナビバー)-->
+{% extends 'Oort/base.html' %}
+{% block content %}
+{% load static %}
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>image</th>
+      <th>Title</th>
+      <th>Cast</th>
+   </tr>
+  </thead>
+
+    {% for content in foo %}
+
+  <tbody>
+  <tr>
+    <td scope="row">{{content.id}}</td>
+
+    {% if content.thumbnail %}
+    <!--サムネイルをクリックするとurls.pyのname='detail'にマッピングされる。コンテンツIDを渡して。-->
+    <td><a href="{% url 'Oort:detail' content.id %}"/><img class="thumbnail" src="{{ content.thumbnail.url }}"/></td>
+    {% else %}
+    <td><a href="{% url 'Oort:detail' content.id %}"/><img class="thumbnail" src="{% static 'alter.PNG' %}"/></td>
+    {% endif %}
+
+    <td>{{content.title}}</td>
+    <td>{% for cast in content.cast.all|slice:"5" %} {{ cast }}, {% endfor %}</td>
+
+    <!--削除ボタン-->
+    <form method="POST">
+      {% csrf_token %}
+      <td>
+        <button type="submit" name="delete" class="btn btn-outline-danger" value="{{ content.id }}">Delete</button>
+      </td>
+    </form>
+  </tr>
+  </tbody>
+
+  {% endfor %}
+</table>
+
+<!--ページネイト用-->
+{% include 'Oort/pagination.html' %}
+
+{% endblock %}

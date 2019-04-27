@@ -1,0 +1,47 @@
+<div class="row mx-auto" style="width: 600px;">
+    <ul class="pagination">
+
+        <!--「前」ページが存在する場合。previous_page_number(現在地から１つマイナスした値がTureになって)リンクされている-->
+        <!--fooはveiws.pyでページ情報と紐づいている-->
+        {% if foo.has_previous %}
+        <li><a class="page-link text-primary d-inline-block" href="?page={{ foo.previous_page_number }}">前</a></li>
+
+        <!--「前」ページが存在しない場合(1ページ目の時)はリンク先はなし-->
+        {% else %}
+        <li class="disabled">
+            <div class="page-link text-secondary d-inline-block disabled" href="#">前</div>
+        </li>
+        {% endif %}
+
+        <!--真ん中の数字羅列処理-->
+        {% for link_page in foo.paginator.page_range %}
+            {% if link_page %}
+
+                {% if link_page >= foo.number|add:"-5" and link_page <= foo.number|add:"5" %}
+
+                    {% if link_page == foo.number %}
+                    <li class="disabled">
+                        <div class="page-link text-secondary d-inline-block disabled" href="#">{{ link_page }}</div>
+                    </li>
+                    {% else %}
+                    <li><a class="page-link text-primary d-inline-block" href="?page={{ link_page }}">{{ link_page }}</a></li>
+                    {% endif %}
+
+                {% endif %}
+            {% endif %}
+
+        {% endfor %}
+
+        <!--「次」ページが存在する場合。next_page_number(現在地から１つプラスした値がTureになって)リンクされている-->
+        {% if foo.has_next %}
+        <li><a class="page-link text-primary d-inline-block" href="?page={{ foo.next_page_number }}">次</a></li>
+        {% else %}
+        <li class="disabled">
+            <div class="page-link text-secondary d-inline-block disabled" href="#">次</div>
+        </li>
+        {% endif %}
+        <li class="p-md-2">
+            {{ foo.paginator.num_pages }} 頁中 {{ foo.number }} 頁目を表示
+        </li>
+    </ul>
+</div>
