@@ -3,6 +3,8 @@ import io
 
 from dal import autocomplete
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+
 from .models import Content, Genre, Director, Cast
 
 
@@ -88,3 +90,9 @@ class CSVUploadForm(forms.Form):
 class DirectImportForm(forms.Form):
     start = forms.IntegerField()
     end = forms.IntegerField()
+
+
+# サインナップ用
+class SignUpForm(UserCreationForm):
+    class Meta:
+        fields = ('username', 'email', 'password1', 'password2')

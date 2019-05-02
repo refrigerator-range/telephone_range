@@ -1,0 +1,23 @@
+{% extends 'Oort/base.html' %}
+{% block content %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!--ログインフォーム用。django機能をそのまま使っている-->
+<form method="post" enctype="multipart/form-data">
+    <!--クロスサイトスクリプトフォージェリ(おまじない)-->
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" name="login">send</button>
+</form>
+
+</body>
+</html>
+
+
+{% endblock %}

@@ -2,13 +2,16 @@ import csv
 from io import TextIOWrapper
 
 from dal import autocomplete
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse, HttpResponseRedirect
 # インポート用render
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.views import generic
+from django.views.generic import CreateView
 
 from Oort.form import ContentForm, GenreForm, CastForm, DirectorForm, CSVUploadForm, DirectImportForm
 from Oort.scrayping import DirectImport
@@ -194,7 +197,6 @@ class Import(generic.FormView):
                 # dura = timedelta(seconds=60)
 
                 for line in csv_file:
-                    print('ライン:', line)
                     # contentにモデル格納用、createdにTure or False
                     # contentは、既存idならupdate。新規idならcreate
                     content, created = Content.objects.update_or_create(id=line[0])
@@ -239,9 +241,6 @@ class Import(generic.FormView):
             # form.pyのDB直接インポート用クラスを経由。数値変換
             d_import_form = DirectImportForm(request.POST)
 
-
-
-
             if d_import_form.is_valid():
                 start = d_import_form.cleaned_data['start']
                 end = d_import_form.cleaned_data['end']
@@ -250,6 +249,35 @@ class Import(generic.FormView):
                 d_import.scrape(start, end)
 
                 return HttpResponseRedirect(reverse('Oort:index'))
+
+
+# サインナップ用
+class SignUp(CreateView):
+    SignUpForm = UserCreationForm
+    template_name = 'Oort/signup.html'
+
+    # GETの場合。フォームを表示
+    def get(self, request):
+        form = self.SignUpForm(request.GET)
+        return render(request, self.template_name, {'form': form})
+
+    # POSTの場合。フォームから入力値を受け取ってきて処理するところ
+    def post(self, request, *args, **kwargs):
+        form = self.SignUpForm(data=request.POST)
+
+        print('かくにん', form)
+
+        # 入力値がちゃんとある場合はユーザ名/パスワードを登録する処理を進める
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('Oort:index')
+
+        # 入力値がない場合
+        return render(request, self.template_name, {'form': form})
 
 
 # オートコンプリート用(キャストDB内を登録画面で検索可能にする)
